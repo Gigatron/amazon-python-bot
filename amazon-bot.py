@@ -15,29 +15,31 @@ class PS5Bot():
 
     def login(self):
         self.driver.get('https://www.amazon.com')
-        sleep(50)
+        sleep(30)
 
     def checkAndBuyPS5(self):
-        while True:
+        succ = False
+        while not succ:
             for card in CARD_TO_BUYS:
                 self.driver.get(card)
-                sleep(1)   
+                sleep(1)
                 try:
-                    buyNow = self.driver.find_element_by_xpath('//*[@id="add-to-cart-button"]')
-                    buyNow.click()
-                    sleep(2)
-                    buyNow2 = self.driver.find_element_by_xpath('//*[@id="hlb-ptc-btn"]')
-                    buyNow2.click()
-                    sleep(2)
-                    buyNow3 = self.driver.find_element_by_xpath('/html/body/div[5]/div/div[2]/form/div/div/div/div[2]/div/div[1]/div/div[1]/div/span/span/input')  
-                    buyNow3.click()
-                    sleep(1)
-                    self.driver.close()
+                    add_to_cart = self.driver.find_element_by_id("add-to-cart-button")
+                    add_to_cart.click()
+                    sleep(1.5)
+                    checkout = self.driver.find_element_by_id("hlb-ptc-btn-native") or self.driver.find_element_by_id("hlb-ptc-btn")
+                    checkout.click()
+                    sleep(1.5)
+                    place_order = self.driver.find_element_by_name("placeYourOrder1")
+                    place_order.click()
+                    sleep(1.5)
+                    print(f"succssfully bought {card}")
                 except Exception as e:
                     print(e)
                     sleep(1.5)
+
             sleep(SLEEP_IN_BETWEEN)
-            
+
 bot = PS5Bot()
 bot.login()
 bot.checkAndBuyPS5()
